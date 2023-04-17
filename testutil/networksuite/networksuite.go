@@ -11,11 +11,11 @@ import (
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
-	campaign "github.com/tendermint/spn/x/campaign/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	participation "github.com/tendermint/spn/x/participation/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	project "github.com/tendermint/spn/x/project/types"
 	reward "github.com/tendermint/spn/x/reward/types"
 	"math/rand"
 	"strconv"
@@ -26,7 +26,7 @@ type NetworkTestSuite struct {
 	suite.Suite
 	Network            *network.Network
 	LaunchState        launch.GenesisState
-	CampaignState      campaign.GenesisState
+	ProjectState       project.GenesisState
 	ClaimState         claim.GenesisState
 	MonitoringcState   monitoringc.GenesisState
 	ParticipationState participation.GenesisState
@@ -50,10 +50,10 @@ func (nts *NetworkTestSuite) SetupSuite() {
 	nts.LaunchState = populateLaunch(r, nts.LaunchState)
 	updateGenesisConfigState(launch.ModuleName, &nts.LaunchState)
 
-	// initialize campaign
-	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[campaign.ModuleName], &nts.CampaignState))
-	nts.CampaignState = populateCampaign(r, nts.CampaignState)
-	updateGenesisConfigState(campaign.ModuleName, &nts.CampaignState)
+	// initialize project
+	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[project.ModuleName], &nts.ProjectState))
+	nts.ProjectState = populateProject(r, nts.ProjectState)
+	updateGenesisConfigState(project.ModuleName, &nts.ProjectState)
 
 	// initialize claim
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[claim.ModuleName], &nts.ClaimState))
@@ -138,34 +138,34 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 	return launchState
 }
 
-func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaign.GenesisState {
-	// add campaigns
+func populateProject(r *rand.Rand, projectState project.GenesisState) project.GenesisState {
+	// add projects
 	for i := 0; i < 5; i++ {
-		camp := campaign.Campaign{
-			CampaignID: uint64(i),
+		prjt := project.Project{
+			ProjectID: uint64(i),
 		}
-		nullify.Fill(&camp)
-		campaignState.Campaigns = append(campaignState.Campaigns, camp)
+		nullify.Fill(&prjt)
+		projectState.Projects = append(projectState.Projects, prjt)
 	}
 
-	// add campaign chains
+	// add project chains
 	for i := 0; i < 5; i++ {
-		campaignState.CampaignChains = append(campaignState.CampaignChains, campaign.CampaignChains{
-			CampaignID: uint64(i),
-			Chains:     []uint64{uint64(i)},
+		projectState.ProjectChains = append(projectState.ProjectChains, project.ProjectChains{
+			ProjectID: uint64(i),
+			Chains:    []uint64{uint64(i)},
 		})
 	}
 
 	// add mainnet accounts
-	campaignID := uint64(5)
+	projectID := uint64(5)
 	for i := 0; i < 5; i++ {
-		campaignState.MainnetAccounts = append(
-			campaignState.MainnetAccounts,
-			sample.MainnetAccount(r, campaignID, sample.Address(r)),
+		projectState.MainnetAccounts = append(
+			projectState.MainnetAccounts,
+			sample.MainnetAccount(r, projectID, sample.Address(r)),
 		)
 	}
 
-	return campaignState
+	return projectState
 }
 
 func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisState {

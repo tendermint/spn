@@ -112,9 +112,6 @@ import (
 	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/spn/docs"
 	spntypes "github.com/tendermint/spn/pkg/types"
-	"github.com/tendermint/spn/x/campaign"
-	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
@@ -130,6 +127,9 @@ import (
 	"github.com/tendermint/spn/x/profile"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/reward"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
@@ -148,6 +148,9 @@ const (
 
 	// missionIDVoting is the mission ID for voting mission to claim airdrop
 	missionIDVoting = 2
+
+	// missionIDSendingRequest is the mission ID for sending request mission to claim airdrop
+	missionIDSendingRequest = 3
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -200,7 +203,7 @@ var (
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		profile.AppModuleBasic{},
 		launch.AppModuleBasic{},
-		campaign.AppModuleBasic{},
+		project.AppModuleBasic{},
 		monitoringc.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
 		reward.AppModuleBasic{},
@@ -216,9 +219,9 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		projecttypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		ibcfeetypes.ModuleName:         nil,
 		icatypes.ModuleName:            nil,
-		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		rewardtypes.ModuleName:         nil,
 		fundraisingtypes.ModuleName:    nil,
 		monitoringctypes.ModuleName:    nil,
@@ -292,7 +295,7 @@ type App struct {
 
 	ProfileKeeper       profilekeeper.Keeper
 	LaunchKeeper        launchkeeper.Keeper
-	CampaignKeeper      campaignkeeper.Keeper
+	ProjectKeeper       projectkeeper.Keeper
 	MonitoringcKeeper   monitoringckeeper.Keeper
 	MonitoringpKeeper   monitoringpkeeper.Keeper
 	RewardKeeper        rewardkeeper.Keeper
@@ -356,7 +359,7 @@ func New(
 		capabilitytypes.StoreKey,
 		profiletypes.StoreKey,
 		launchtypes.StoreKey,
-		campaigntypes.StoreKey,
+		projecttypes.StoreKey,
 		monitoringctypes.StoreKey,
 		monitoringptypes.StoreKey,
 		rewardtypes.StoreKey,
@@ -666,18 +669,18 @@ func New(
 		app.LaunchKeeper,
 	)
 
-	campaignKeeper := campaignkeeper.NewKeeper(
+	projectKeeper := projectkeeper.NewKeeper(
 		appCodec,
-		keys[campaigntypes.StoreKey],
-		keys[campaigntypes.MemStoreKey],
-		app.GetSubspace(campaigntypes.ModuleName),
+		keys[projecttypes.StoreKey],
+		keys[projecttypes.MemStoreKey],
+		app.GetSubspace(projecttypes.ModuleName),
 		&app.LaunchKeeper,
 		app.BankKeeper,
 		app.DistrKeeper,
 		app.ProfileKeeper,
 	)
-	app.CampaignKeeper = *campaignKeeper
-	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
+	app.ProjectKeeper = *projectKeeper
+	app.LaunchKeeper.SetProjectKeeper(projectKeeper)
 
 	scopedMonitoringcKeeper := app.CapabilityKeeper.ScopeToModule(monitoringctypes.ModuleName)
 	app.ScopedMonitoringcKeeper = scopedMonitoringcKeeper
@@ -731,9 +734,9 @@ func New(
 		app.BankKeeper,
 	)
 
-	// set fundraising hooks
+	// register the fundraising hooks
 	app.FundraisingKeeper = *app.FundraisingKeeper.SetHooks(
-		app.CampaignKeeper.CampaignAuctionEventHooks(),
+		app.ProjectKeeper.ProjectAuctionEventHooks(),
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
@@ -789,7 +792,7 @@ func New(
 		app.transferModule,
 		profile.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launch.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
-		campaign.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
+		project.NewAppModule(appCodec, app.ProjectKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		monitoringcModule,
 		monitoringpModule,
 		reward.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
@@ -833,7 +836,7 @@ func New(
 		profiletypes.ModuleName,
 		fundraisingtypes.ModuleName,
 		rewardtypes.ModuleName,
-		campaigntypes.ModuleName,
+		projecttypes.ModuleName,
 		monitoringctypes.ModuleName,
 		monitoringptypes.ModuleName,
 		participationtypes.ModuleName,
@@ -866,7 +869,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		profiletypes.ModuleName,
 		rewardtypes.ModuleName,
-		campaigntypes.ModuleName,
+		projecttypes.ModuleName,
 		monitoringctypes.ModuleName,
 		monitoringptypes.ModuleName,
 		participationtypes.ModuleName,
@@ -903,7 +906,7 @@ func New(
 		feegrant.ModuleName,
 		profiletypes.ModuleName,
 		launchtypes.ModuleName,
-		campaigntypes.ModuleName,
+		projecttypes.ModuleName,
 		monitoringctypes.ModuleName,
 		monitoringptypes.ModuleName,
 		rewardtypes.ModuleName,
@@ -1095,6 +1098,8 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
 	// Register new tendermint queries routes from grpc-gateway.
 	tmservice.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
+	// Register node gRPC service for grpc-gateway.
+	nodeservice.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
 
 	// Register grpc-gateway routes for all modules.
 	ModuleBasics.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -1146,7 +1151,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(profiletypes.ModuleName)
 	paramsKeeper.Subspace(launchtypes.ModuleName)
-	paramsKeeper.Subspace(campaigntypes.ModuleName)
+	paramsKeeper.Subspace(projecttypes.ModuleName)
 	paramsKeeper.Subspace(monitoringctypes.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	paramsKeeper.Subspace(rewardtypes.ModuleName)

@@ -11,10 +11,10 @@ def cmd_devnull(command):
 def date_f(d):
     return d.isoformat("T") + "Z"
 
-def initialize_campaign():
+def initialize_project():
     cmd_devnull('spnd tx staking delegate {} 100000uspn --from bob -y'.format(val_address))
     cmd_devnull('spnd tx staking delegate {} 100000uspn --from carol -y'.format(val_address))
     cmd_devnull('spnd tx staking delegate {} 100000uspn --from dave -y'.format(val_address))
     cmd_devnull('spnd tx profile create-coordinator --from alice -y')
-    cmd_devnull('spnd tx campaign create-campaign orbit 1000000orbit --from alice -y')
-    cmd_devnull('spnd tx campaign mint-vouchers 1 100000orbit --from alice -y')
+    cmd_devnull('spnd tx project create-project orbit 1000000orbit --from alice -y')
+    cmd_devnull('spnd tx project mint-vouchers 1 100000orbit --from alice -y')

@@ -12,9 +12,9 @@ import (
 	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 func createNGenesisAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.GenesisAccount {
@@ -144,15 +144,15 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 	})
 }
 
-// TODO: These tests must be refactored and use mocking to abstract campaign logic
+// TODO: These tests must be refactored and use mocking to abstract project logic
 // https://github.com/tendermint/spn/issues/807
 func TestGenesisAccountMainnet(t *testing.T) {
 	var (
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 
-		campaignID  = uint64(5)
-		campaign    = sample.Campaign(r, campaignID)
+		projectID   = uint64(5)
+		project     = sample.Project(r, projectID)
 		launchID    = uint64(10)
 		chain       = sample.Chain(r, launchID, sample.Uint64(r))
 		totalSupply = tc.Coins(t, "1000foo")
@@ -161,22 +161,22 @@ func TestGenesisAccountMainnet(t *testing.T) {
 		addr2       = sample.Address(r)
 	)
 
-	// create campaign and mainnet accounts and mainnet chain
-	campaign.TotalSupply = totalSupply
-	tk.CampaignKeeper.SetCampaign(ctx, campaign)
-	tk.CampaignKeeper.SetTotalShares(ctx, totalShares)
-	tk.CampaignKeeper.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
-		CampaignID: campaignID,
-		Address:    addr1,
-		Shares:     tc.Shares(t, "60foo"),
+	// create project and mainnet accounts and mainnet chain
+	project.TotalSupply = totalSupply
+	tk.ProjectKeeper.SetProject(ctx, project)
+	tk.ProjectKeeper.SetTotalShares(ctx, totalShares)
+	tk.ProjectKeeper.SetMainnetAccount(ctx, projecttypes.MainnetAccount{
+		ProjectID: projectID,
+		Address:   addr1,
+		Shares:    tc.Shares(t, "60foo"),
 	})
-	tk.CampaignKeeper.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
-		CampaignID: campaignID,
-		Address:    addr2,
-		Shares:     tc.Shares(t, "40foo"),
+	tk.ProjectKeeper.SetMainnetAccount(ctx, projecttypes.MainnetAccount{
+		ProjectID: projectID,
+		Address:   addr2,
+		Shares:    tc.Shares(t, "40foo"),
 	})
 	chain.IsMainnet = true
-	chain.CampaignID = campaignID
+	chain.ProjectID = projectID
 	tk.LaunchKeeper.SetChain(ctx, chain)
 
 	t.Run("should allow querying a single genesis account for a mainnet", func(t *testing.T) {

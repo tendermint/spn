@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 // Vote is a simplified type for abci.VoteInfo for testing purpose
@@ -79,17 +79,17 @@ func MonitoringInfo(blockCount uint64, sc ...spntypes.SignatureCount) (mi monito
 }
 
 // Shares returns a Shares object from a string of coin inputs
-func Shares(t testing.TB, coinStr string) campaigntypes.Shares {
-	shares := campaigntypes.NewSharesFromCoins(Coins(t, coinStr))
+func Shares(t testing.TB, coinStr string) projecttypes.Shares {
+	shares := projecttypes.NewSharesFromCoins(Coins(t, coinStr))
 	return shares
 }
 
 // Vouchers returns a Vouchers object from a string of coin inputs
-func Vouchers(t testing.TB, coinStr string, campaignID uint64) sdk.Coins {
+func Vouchers(t testing.TB, coinStr string, projectID uint64) sdk.Coins {
 	coins := Coins(t, coinStr)
 	vouchers := make(sdk.Coins, len(coins))
 	for i, coin := range coins {
-		coin.Denom = campaigntypes.VoucherDenom(campaignID, coin.Denom)
+		coin.Denom = projecttypes.VoucherDenom(projectID, coin.Denom)
 		vouchers[i] = coin
 	}
 	return vouchers

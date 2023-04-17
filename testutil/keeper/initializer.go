@@ -31,8 +31,6 @@ import (
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
-	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -43,6 +41,8 @@ import (
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
@@ -52,7 +52,7 @@ var moduleAccountPerms = map[string][]string{
 	distrtypes.ModuleName:          nil,
 	minttypes.ModuleName:           {authtypes.Minter},
 	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-	campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
+	projecttypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	rewardtypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
@@ -262,23 +262,23 @@ func (i initializer) Launch(
 	)
 }
 
-func (i initializer) Campaign(
+func (i initializer) Project(
 	launchKeeper *launchkeeper.Keeper,
 	profileKeeper *profilekeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
 	distrKeeper distrkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
-) *campaignkeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(campaigntypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(campaigntypes.MemStoreKey)
+) *projectkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(projecttypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(projecttypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, storetypes.StoreTypeMemory, nil)
 
-	paramKeeper.Subspace(campaigntypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(campaigntypes.ModuleName)
+	paramKeeper.Subspace(projecttypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(projecttypes.ModuleName)
 
-	return campaignkeeper.NewKeeper(
+	return projectkeeper.NewKeeper(
 		i.Codec,
 		storeKey,
 		memStoreKey,
