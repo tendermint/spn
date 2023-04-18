@@ -26,6 +26,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	govv1types "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
@@ -85,6 +86,7 @@ func InterfaceRegistry() codectypes.InterfaceRegistry {
 	monitoringp.RegisterInterfaces(interfaceRegistry)
 	reward.RegisterInterfaces(interfaceRegistry)
 	participation.RegisterInterfaces(interfaceRegistry)
+	minttypes.RegisterInterfaces(interfaceRegistry)
 	fundraising.RegisterInterfaces(interfaceRegistry)
 
 	return interfaceRegistry

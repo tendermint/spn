@@ -58,10 +58,16 @@ func fauxMerkleModeOpt(bapp *baseapp.BaseApp) {
 	bapp.SetFauxMerkleMode()
 }
 
-// go test ./app -v -benchmem -run=^$ -bench ^BenchmarkSimulation -Commit=true -cpuprofile cpu.out
+// BenchmarkSimulation run the chain simulation
+// Running using starport command:
+// `starport chain simulate -v --numBlocks 200 --blockSize 50`
+// Running as go benchmark test:
+// `go test -benchmem -run=^$ -bench ^BenchmarkSimulation ./app -NumBlocks=200 -BlockSize 50 -Commit=true -Verbose=true -Enabled=true`
 func BenchmarkSimulation(b *testing.B) {
 	simcli.FlagSeedValue = 10
 	simcli.FlagVerboseValue = true
+	simcli.FlagCommitValue = true
+	simcli.FlagEnabledValue = true
 
 	config := simcli.NewConfigFromFlags()
 	config.ChainID = app.DefaultChainID
