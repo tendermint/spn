@@ -1,0 +1,14 @@
+syntax = "proto3";
+package spn.reward;
+
+import "gogoproto/gogo.proto";
+import "spn/reward/params.proto";
+import "spn/reward/reward_pool.proto";
+
+option go_package = "github.com/tendermint/spn/x/reward/types";
+
+// GenesisState defines the reward module's genesis state.
+message GenesisState {
+  repeated RewardPool rewardPools = 1 [(gogoproto.nullable) = false];
+  Params              params      = 2 [(gogoproto.nullable) = false];
+}

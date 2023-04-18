@@ -1,0 +1,19 @@
+syntax = "proto3";
+package spn.participation;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/tendermint/spn/x/participation/types";
+
+// Allocations used by a user for a specific auction
+message AuctionUsedAllocations {
+  string address        = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  uint64 auctionID      = 2;
+  bool   withdrawn      = 3;
+  string numAllocations = 4 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (cosmos_proto.scalar)  = "cosmos.Int"
+  ];
+}

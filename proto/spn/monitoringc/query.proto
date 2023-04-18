@@ -1,0 +1,110 @@
+syntax = "proto3";
+package spn.monitoringc;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+
+import "spn/monitoringc/params.proto";
+import "spn/monitoringc/provider_client_id.proto";
+import "spn/monitoringc/launch_id_from_verified_client_id.proto";
+import "spn/monitoringc/launch_id_from_channel_id.proto";
+import "spn/monitoringc/monitoring_history.proto";
+
+option go_package = "github.com/tendermint/spn/x/monitoringc/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Queries a list of VerifiedClientIds items.
+  rpc VerifiedClientIds(QueryGetVerifiedClientIdsRequest) returns (QueryGetVerifiedClientIdsResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/verified_client_ids/{launchID}";
+  }
+
+  // Queries a ProviderClientID by index.
+  rpc ProviderClientID(QueryGetProviderClientIDRequest) returns (QueryGetProviderClientIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/provider_client_id/{launchID}";
+  }
+
+  // Queries a list of ProviderClientID items.
+  rpc ProviderClientIDAll(QueryAllProviderClientIDRequest) returns (QueryAllProviderClientIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/provider_client_id";
+  }
+
+  // Queries a LaunchIDFromChannelID by index.
+  rpc LaunchIDFromChannelID(QueryGetLaunchIDFromChannelIDRequest) returns (QueryGetLaunchIDFromChannelIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id/{channelID}";
+  }
+
+  // Queries a list of LaunchIDFromChannelID items.
+  rpc LaunchIDFromChannelIDAll(QueryAllLaunchIDFromChannelIDRequest) returns (QueryAllLaunchIDFromChannelIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id";
+  }
+
+  // Queries a MonitoringHistory by launch id.
+  rpc MonitoringHistory(QueryGetMonitoringHistoryRequest) returns (QueryGetMonitoringHistoryResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history/{launchID}";
+  }
+
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/params";
+  }
+}
+
+message QueryGetVerifiedClientIdsRequest {
+  uint64 launchID = 1;
+}
+
+message QueryGetVerifiedClientIdsResponse {
+  repeated string clientIds = 1;
+}
+
+message QueryGetProviderClientIDRequest {
+  uint64 launchID = 1;
+}
+
+message QueryGetProviderClientIDResponse {
+  ProviderClientID providerClientID = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllProviderClientIDRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllProviderClientIDResponse {
+  repeated ProviderClientID              providerClientID = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination       = 2;
+}
+
+message QueryGetLaunchIDFromChannelIDRequest {
+  string channelID = 1;
+}
+
+message QueryGetLaunchIDFromChannelIDResponse {
+  LaunchIDFromChannelID launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllLaunchIDFromChannelIDRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllLaunchIDFromChannelIDResponse {
+  repeated LaunchIDFromChannelID         launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination            = 2;
+}
+
+message QueryGetMonitoringHistoryRequest {
+  uint64 launchID = 1;
+}
+
+message QueryGetMonitoringHistoryResponse {
+  MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

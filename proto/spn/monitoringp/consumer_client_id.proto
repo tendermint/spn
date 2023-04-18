@@ -1,0 +1,8 @@
+syntax = "proto3";
+package spn.monitoringp;
+
+option go_package = "github.com/tendermint/spn/x/monitoringp/types";
+
+message ConsumerClientID {
+  string clientID = 1;
+}

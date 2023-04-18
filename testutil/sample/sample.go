@@ -2,6 +2,12 @@
 package sample
 
 import (
+	launch "github.com/tendermint/spn/x/launch/types"
+	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringp "github.com/tendermint/spn/x/monitoringp/types"
+	participation "github.com/tendermint/spn/x/participation/types"
+	profile "github.com/tendermint/spn/x/profile/types"
+	reward "github.com/tendermint/spn/x/reward/types"
 	"math/rand"
 	"strconv"
 	"testing"
@@ -18,10 +24,10 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibctypes "github.com/cosmos/ibc-go/v7/modules/core/types"
 	"github.com/stretchr/testify/require"
 	fundraising "github.com/tendermint/fundraising/x/fundraising/types"
-
 	project "github.com/tendermint/spn/x/project/types"
 )
 
@@ -34,13 +40,15 @@ func Codec() codec.Codec {
 	stakingtypes.RegisterInterfaces(interfaceRegistry)
 	banktypes.RegisterInterfaces(interfaceRegistry)
 	ibctypes.RegisterInterfaces(interfaceRegistry)
-	//launch.RegisterInterfaces(interfaceRegistry)
-	//profile.RegisterInterfaces(interfaceRegistry)
-	//project.RegisterInterfaces(interfaceRegistry)
-	//monitoringc.RegisterInterfaces(interfaceRegistry)
-	//monitoringp.RegisterInterfaces(interfaceRegistry)
-	//reward.RegisterInterfaces(interfaceRegistry)
-	//participation.RegisterInterfaces(interfaceRegistry)
+	channeltypes.RegisterInterfaces(interfaceRegistry)
+
+	launch.RegisterInterfaces(interfaceRegistry)
+	profile.RegisterInterfaces(interfaceRegistry)
+	project.RegisterInterfaces(interfaceRegistry)
+	monitoringc.RegisterInterfaces(interfaceRegistry)
+	monitoringp.RegisterInterfaces(interfaceRegistry)
+	reward.RegisterInterfaces(interfaceRegistry)
+	participation.RegisterInterfaces(interfaceRegistry)
 	fundraising.RegisterInterfaces(interfaceRegistry)
 
 	return codec.NewProtoCodec(interfaceRegistry)

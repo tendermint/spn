@@ -1,0 +1,51 @@
+syntax = "proto3";
+package spn.launch;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+import "spn/launch/genesis_account.proto";
+import "spn/launch/vesting_account.proto";
+import "spn/launch/genesis_validator.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+message Request {
+  uint64         launchID  = 1;
+  uint64         requestID = 2;
+  string         creator   = 3;
+  int64          createdAt = 4;
+  RequestContent content   = 5 [(gogoproto.nullable) = false];
+  enum Status {
+    PENDING  = 0;
+    APPROVED = 1;
+    REJECTED = 2;
+  }
+  Status status = 6;
+}
+
+message RequestContent {
+  oneof content {
+    GenesisAccount   genesisAccount   = 1;
+    VestingAccount   vestingAccount   = 2;
+    GenesisValidator genesisValidator = 3;
+    AccountRemoval   accountRemoval   = 4;
+    ValidatorRemoval validatorRemoval = 5;
+    ParamChange      paramChange      = 6;
+  }
+}
+
+message AccountRemoval {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message ValidatorRemoval {
+  string valAddress = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message ParamChange {
+  uint64 launchID = 1;
+  string module   = 2;
+  string param    = 3;
+  bytes  value    = 4;
+}

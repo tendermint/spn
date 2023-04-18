@@ -1,0 +1,30 @@
+syntax = "proto3";
+package spn.launch;
+
+import "gogoproto/gogo.proto";
+import "spn/launch/request.proto";
+import "spn/launch/vesting_account.proto";
+import "spn/launch/genesis_account.proto";
+import "spn/launch/genesis_validator.proto";
+import "spn/launch/chain.proto";
+import "spn/launch/params.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+// GenesisState defines the launch module's genesis state.
+message GenesisState {
+  repeated Chain            chains            = 1 [(gogoproto.nullable) = false];
+  uint64                    chainCounter      = 2;
+  repeated GenesisAccount   genesisAccounts   = 3 [(gogoproto.nullable) = false];
+  repeated VestingAccount   vestingAccounts   = 4 [(gogoproto.nullable) = false];
+  repeated GenesisValidator genesisValidators = 5 [(gogoproto.nullable) = false];
+  repeated ParamChange      paramChanges      = 6 [(gogoproto.nullable) = false];
+  repeated Request          requests          = 7 [(gogoproto.nullable) = false];
+  repeated RequestCounter   requestCounters   = 8 [(gogoproto.nullable) = false];
+  Params                    params            = 9 [(gogoproto.nullable) = false];
+}
+
+message RequestCounter {
+  uint64 launchID = 1;
+  uint64 counter  = 2;
+}
