@@ -24,11 +24,12 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
 	claimtypes "github.com/ignite/modules/x/claim/types"
 	minttypes "github.com/ignite/modules/x/mint/types"
-	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
-	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
@@ -69,14 +70,11 @@ type initializer struct {
 }
 
 func newInitializer() initializer {
-	cdc := sample.Codec()
 	db := tmdb.NewMemDB()
-	stateStore := store.NewCommitMultiStore(db)
-
 	return initializer{
-		Codec:      cdc,
 		DB:         db,
-		StateStore: stateStore,
+		Codec:      sample.Codec(),
+		StateStore: store.NewCommitMultiStore(db),
 	}
 }
 

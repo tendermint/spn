@@ -17,11 +17,12 @@ import (
 	ibcclienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v7/modules/core/03-connection/types"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	claimkeeper "github.com/ignite/modules/x/claim/keeper"
-	claimtypes "github.com/ignite/modules/x/claim/types"
 	"github.com/stretchr/testify/require"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+
+	claimkeeper "github.com/ignite/modules/x/claim/keeper"
+	claimtypes "github.com/ignite/modules/x/claim/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/keeper/mocks"

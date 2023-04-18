@@ -2,12 +2,6 @@
 package sample
 
 import (
-	launch "github.com/tendermint/spn/x/launch/types"
-	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
-	monitoringp "github.com/tendermint/spn/x/monitoringp/types"
-	participation "github.com/tendermint/spn/x/participation/types"
-	profile "github.com/tendermint/spn/x/profile/types"
-	reward "github.com/tendermint/spn/x/reward/types"
 	"math/rand"
 	"strconv"
 	"testing"
@@ -22,25 +16,67 @@ import (
 	cosmosed25519 "github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	"github.com/cosmos/cosmos-sdk/x/authz"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
+	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
+	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
+	"github.com/cosmos/cosmos-sdk/x/feegrant"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	govv1types "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
+	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
+	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
+	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	ibcclienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibctypes "github.com/cosmos/ibc-go/v7/modules/core/types"
+	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	"github.com/stretchr/testify/require"
 	fundraising "github.com/tendermint/fundraising/x/fundraising/types"
+	launch "github.com/tendermint/spn/x/launch/types"
+	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringp "github.com/tendermint/spn/x/monitoringp/types"
+	participation "github.com/tendermint/spn/x/participation/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 	project "github.com/tendermint/spn/x/project/types"
+	reward "github.com/tendermint/spn/x/reward/types"
+
+	claimtypes "github.com/ignite/modules/x/claim/types"
 )
 
-// Codec returns a codec with preregistered interfaces
-func Codec() codec.Codec {
+func InterfaceRegistry() codectypes.InterfaceRegistry {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 
 	cryptocodec.RegisterInterfaces(interfaceRegistry)
 	authtypes.RegisterInterfaces(interfaceRegistry)
+	authz.RegisterInterfaces(interfaceRegistry)
 	stakingtypes.RegisterInterfaces(interfaceRegistry)
 	banktypes.RegisterInterfaces(interfaceRegistry)
 	ibctypes.RegisterInterfaces(interfaceRegistry)
+	ibcfeetypes.RegisterInterfaces(interfaceRegistry)
+	ibcclienttypes.RegisterInterfaces(interfaceRegistry)
+	ibctm.RegisterInterfaces(interfaceRegistry)
+	ibctransfertypes.RegisterInterfaces(interfaceRegistry)
+	icacontrollertypes.RegisterInterfaces(interfaceRegistry)
+	icatypes.RegisterInterfaces(interfaceRegistry)
 	channeltypes.RegisterInterfaces(interfaceRegistry)
+	consensusparamtypes.RegisterInterfaces(interfaceRegistry)
+	slashingtypes.RegisterInterfaces(interfaceRegistry)
+	upgradetypes.RegisterInterfaces(interfaceRegistry)
+	distrtypes.RegisterInterfaces(interfaceRegistry)
+	vestingtypes.RegisterInterfaces(interfaceRegistry)
+	claimtypes.RegisterInterfaces(interfaceRegistry)
+	feegrant.RegisterInterfaces(interfaceRegistry)
+	govtypes.RegisterInterfaces(interfaceRegistry)
+	govv1types.RegisterInterfaces(interfaceRegistry)
+	evidencetypes.RegisterInterfaces(interfaceRegistry)
+	crisistypes.RegisterInterfaces(interfaceRegistry)
 
 	launch.RegisterInterfaces(interfaceRegistry)
 	profile.RegisterInterfaces(interfaceRegistry)
@@ -51,7 +87,12 @@ func Codec() codec.Codec {
 	participation.RegisterInterfaces(interfaceRegistry)
 	fundraising.RegisterInterfaces(interfaceRegistry)
 
-	return codec.NewProtoCodec(interfaceRegistry)
+	return interfaceRegistry
+}
+
+// Codec returns a codec with preregistered interfaces
+func Codec() codec.Codec {
+	return codec.NewProtoCodec(InterfaceRegistry())
 }
 
 // Bool returns randomly true or false

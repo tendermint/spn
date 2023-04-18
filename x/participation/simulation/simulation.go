@@ -4,8 +4,6 @@ import (
 	"errors"
 	"math/rand"
 
-	simappparams "cosmossdk.io/simapp/params"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -15,7 +13,7 @@ import (
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
-
+	"github.com/tendermint/spn/testutil/encoding"
 	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/participation/keeper"
 	"github.com/tendermint/spn/x/participation/types"
@@ -55,7 +53,7 @@ func SimulateMsgParticipate(
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),
@@ -97,7 +95,7 @@ func SimulateMsgWithdrawAllocations(
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),
@@ -145,7 +143,7 @@ func SimulateMsgCancelAuction(
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),

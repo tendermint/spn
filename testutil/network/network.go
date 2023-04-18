@@ -18,7 +18,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/stretchr/testify/require"
-
 	"github.com/tendermint/spn/app"
 	"github.com/tendermint/spn/cmd"
 )
@@ -41,14 +40,14 @@ func New(t *testing.T, cfg network.Config) *network.Network {
 // genesis and single validator. All other parameters are inherited from cosmos-sdk/testutil/network.DefaultConfig
 func DefaultConfig() network.Config {
 	var (
-		encoding = cmd.MakeEncodingConfig(app.ModuleBasics)
-		chainID  = "chain-" + tmrand.NewRand().Str(6)
+		cdc     = cmd.MakeEncodingConfig(app.ModuleBasics)
+		chainID = "chain-" + tmrand.NewRand().Str(6)
 	)
 	return network.Config{
-		Codec:             encoding.Marshaler,
-		TxConfig:          encoding.TxConfig,
-		LegacyAmino:       encoding.Amino,
-		InterfaceRegistry: encoding.InterfaceRegistry,
+		Codec:             cdc.Marshaler,
+		TxConfig:          cdc.TxConfig,
+		LegacyAmino:       cdc.Amino,
+		InterfaceRegistry: cdc.InterfaceRegistry,
 		AccountRetriever:  authtypes.AccountRetriever{},
 		AppConstructor: func(val network.ValidatorI) servertypes.Application {
 			return app.New(
@@ -59,14 +58,14 @@ func DefaultConfig() network.Config {
 				map[int64]bool{},
 				val.GetCtx().Config.RootDir,
 				0,
-				encoding,
+				cdc,
 				simtestutil.EmptyAppOptions{},
 				baseapp.SetPruning(pruningtypes.NewPruningOptionsFromString(val.GetAppConfig().Pruning)),
 				baseapp.SetMinGasPrices(val.GetAppConfig().MinGasPrices),
 				baseapp.SetChainID(chainID),
 			)
 		},
-		GenesisState:    app.ModuleBasics.DefaultGenesis(encoding.Marshaler),
+		GenesisState:    app.ModuleBasics.DefaultGenesis(cdc.Marshaler),
 		TimeoutCommit:   2 * time.Second,
 		ChainID:         chainID,
 		NumValidators:   1,

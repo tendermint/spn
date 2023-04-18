@@ -7,15 +7,15 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
-	ignterrors "github.com/ignite/modules/pkg/errors"
 	"github.com/stretchr/testify/require"
-
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+
+	ignterrors "github.com/ignite/modules/pkg/errors"
 )
 
 func Test_msgServer_CreateClient(t *testing.T) {

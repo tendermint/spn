@@ -105,17 +105,11 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	"github.com/ignite/modules/x/claim"
-	claimkeeper "github.com/ignite/modules/x/claim/keeper"
-	claimtypes "github.com/ignite/modules/x/claim/types"
-	"github.com/ignite/modules/x/mint"
-	mintkeeper "github.com/ignite/modules/x/mint/keeper"
-	minttypes "github.com/ignite/modules/x/mint/types"
+	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	"github.com/spf13/cast"
 	"github.com/tendermint/fundraising/x/fundraising"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
-
 	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/spn/docs"
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -140,6 +134,13 @@ import (
 	"github.com/tendermint/spn/x/reward"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
+
+	"github.com/ignite/modules/x/claim"
+	claimkeeper "github.com/ignite/modules/x/claim/keeper"
+	claimtypes "github.com/ignite/modules/x/claim/types"
+	"github.com/ignite/modules/x/mint"
+	mintkeeper "github.com/ignite/modules/x/mint/keeper"
+	minttypes "github.com/ignite/modules/x/mint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -192,15 +193,18 @@ var (
 		gov.NewAppModuleBasic(getGovProposalHandlers()),
 		params.AppModuleBasic{},
 		slashing.AppModuleBasic{},
-		feegrantmodule.AppModuleBasic{},
-		authzmodule.AppModuleBasic{},
 		ibc.AppModuleBasic{},
+		ibctm.AppModuleBasic{},
+		feegrantmodule.AppModuleBasic{},
 		upgrade.AppModuleBasic{},
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
+		ica.AppModuleBasic{},
+		authzmodule.AppModuleBasic{},
 		vesting.AppModuleBasic{},
-		participation.AppModuleBasic{},
+		ibcfee.AppModuleBasic{},
 		consensus.AppModuleBasic{},
+		participation.AppModuleBasic{},
 		claim.AppModuleBasic{},
 		crisis.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
@@ -371,6 +375,7 @@ func New(
 		ibcfeetypes.StoreKey,
 		consensusparamtypes.StoreKey,
 		claimtypes.StoreKey,
+		crisistypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -410,10 +415,6 @@ func New(
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
 	scopedICAHostKeeper := app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
-
-	// add capability keeper
-	app.CapabilityKeeper = capabilitykeeper.NewKeeper(appCodec, keys[capabilitytypes.StoreKey], memKeys[capabilitytypes.MemStoreKey])
-	app.CapabilityKeeper.Seal()
 
 	// this line is used by starport scaffolding # stargate/app/scopedKeeper
 
@@ -581,7 +582,6 @@ func New(
 		scopedTransferKeeper,
 	)
 	app.transferModule = transfer.NewAppModule(app.TransferKeeper)
-	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 
 	// Create Transfer Stack
 	// SendPacket, since it is originating from the application to core IBC:
@@ -755,7 +755,6 @@ func New(
 	)
 
 	// Create static IBC router, add transfer route, then set and seal it
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
 	ibcRouter.AddRoute(monitoringctypes.ModuleName, monitoringcModule)
 	ibcRouter.AddRoute(monitoringptypes.ModuleName, monitoringpModule)
 
@@ -828,6 +827,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		icatypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		govtypes.ModuleName,
@@ -870,6 +870,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		icatypes.ModuleName,
 		profiletypes.ModuleName,
 		rewardtypes.ModuleName,
 		projecttypes.ModuleName,
@@ -900,6 +901,7 @@ func New(
 		ibcexported.ModuleName,
 		ibctransfertypes.ModuleName,
 		ibcfeetypes.ModuleName,
+		icatypes.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		paramstypes.ModuleName,

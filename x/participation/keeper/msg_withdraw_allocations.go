@@ -5,8 +5,9 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ignterrors "github.com/ignite/modules/pkg/errors"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+
+	ignterrors "github.com/ignite/modules/pkg/errors"
 
 	"github.com/tendermint/spn/x/participation/types"
 )
