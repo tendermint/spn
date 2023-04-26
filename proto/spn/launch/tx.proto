@@ -1,0 +1,99 @@
+syntax = "proto3";
+package spn.launch;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+
+import "spn/launch/chain.proto";
+import "spn/launch/request.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
+  rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
+  rpc UpdateLaunchInformation(MsgUpdateLaunchInformation) returns (MsgUpdateLaunchInformationResponse);
+  rpc SendRequest(MsgSendRequest) returns (MsgSendRequestResponse);
+  rpc SettleRequest(MsgSettleRequest) returns (MsgSettleRequestResponse);
+  rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
+  rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
+}
+
+message MsgCreateChain {
+  string         coordinator                       = 1;
+  string         genesisChainID                    = 2;
+  string         sourceURL                         = 3;
+  string         sourceHash                        = 4;
+  InitialGenesis initialGenesis                    = 5 [(gogoproto.nullable) = false];
+  bool           hasProject                        = 6;
+  uint64         projectID                         = 7;
+  repeated cosmos.base.v1beta1.Coin AccountBalance = 8 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  bytes metadata = 9;
+}
+
+message MsgCreateChainResponse {
+  uint64 launchID = 1;
+}
+
+message MsgEditChain {
+  string coordinator  = 1;
+  uint64 launchID     = 2;
+  bool   setProjectID = 3;
+  uint64 projectID    = 4;
+  bytes  metadata     = 5;
+}
+
+message MsgEditChainResponse {}
+
+message MsgUpdateLaunchInformation {
+  string         coordinator    = 1;
+  uint64         launchID       = 2;
+  string         genesisChainID = 3;
+  string         sourceURL      = 4;
+  string         sourceHash     = 5;
+  InitialGenesis initialGenesis = 6;
+}
+
+message MsgUpdateLaunchInformationResponse {}
+
+message MsgSendRequest {
+  string         creator  = 1;
+  uint64         launchID = 2;
+  RequestContent content  = 3 [(gogoproto.nullable) = false];
+}
+
+message MsgSendRequestResponse {
+  uint64 requestID    = 1;
+  bool   autoApproved = 2;
+}
+
+message MsgSettleRequest {
+  string signer    = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  uint64 launchID  = 2;
+  uint64 requestID = 3;
+  bool   approve   = 4;
+}
+
+message MsgSettleRequestResponse {}
+
+message MsgTriggerLaunch {
+  string                    coordinator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  uint64                    launchID    = 2;
+  google.protobuf.Timestamp launchTime  = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+}
+
+message MsgTriggerLaunchResponse {}
+
+message MsgRevertLaunch {
+  string coordinator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  uint64 launchID    = 2;
+}
+
+message MsgRevertLaunchResponse {}

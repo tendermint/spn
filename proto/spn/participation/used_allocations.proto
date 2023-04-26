@@ -1,0 +1,17 @@
+syntax = "proto3";
+package spn.participation;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/tendermint/spn/x/participation/types";
+
+// Describes the number of allocations already used by a user for existing auctions
+message UsedAllocations {
+  string address        = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string numAllocations = 2 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (cosmos_proto.scalar)  = "cosmos.Int"
+  ];
+}

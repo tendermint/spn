@@ -4,9 +4,9 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ignterrors "github.com/ignite/modules/pkg/errors"
-
 	"github.com/tendermint/spn/x/profile/types"
+
+	ignterrors "github.com/ignite/modules/pkg/errors"
 )
 
 // SetCoordinatorByAddress set a specific coordinatorByAddress in the store from its index

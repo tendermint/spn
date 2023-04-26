@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	connectiontypes "github.com/cosmos/ibc-go/v6/modules/core/03-connection/types"
-	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
-	ignterrors "github.com/ignite/modules/pkg/errors"
+	connectiontypes "github.com/cosmos/ibc-go/v7/modules/core/03-connection/types"
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	"github.com/stretchr/testify/require"
-
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
+
+	ignterrors "github.com/ignite/modules/pkg/errors"
 )
 
 // testSetupWithFooClient returns a test setup with monitoring keeper containing necessary IBC mocks for a client with ID foo

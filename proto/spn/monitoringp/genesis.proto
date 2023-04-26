@@ -1,0 +1,19 @@
+syntax = "proto3";
+package spn.monitoringp;
+
+import "gogoproto/gogo.proto";
+import "spn/monitoringp/params.proto";
+import "spn/monitoringp/consumer_client_id.proto";
+import "spn/monitoringp/connection_channel_id.proto";
+import "spn/monitoringp/monitoring_info.proto";
+
+option go_package = "github.com/tendermint/spn/x/monitoringp/types";
+
+// GenesisState defines the monitoringp module's genesis state.
+message GenesisState {
+  string              port_id             = 1;
+  ConsumerClientID    consumerClientID    = 2;
+  ConnectionChannelID connectionChannelID = 3;
+  MonitoringInfo      monitoringInfo      = 4;
+  Params              params              = 5 [(gogoproto.nullable) = false];
+}

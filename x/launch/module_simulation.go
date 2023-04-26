@@ -59,13 +59,13 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.LegacyParamChange {
 	launchParams := sample.LaunchParams(r)
-	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLaunchTimeRange), func(r *rand.Rand) string {
+	return []simtypes.LegacyParamChange{
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyLaunchTimeRange), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(launchParams.LaunchTimeRange))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyChainCreationFee), func(r *rand.Rand) string {
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyChainCreationFee), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(launchParams.ChainCreationFee))
 		}),
 	}

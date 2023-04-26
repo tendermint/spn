@@ -1,0 +1,12 @@
+syntax = "proto3";
+package spn.monitoringc;
+
+import "gogoproto/gogo.proto";
+import "spn/types/monitoring.proto";
+
+option go_package = "github.com/tendermint/spn/x/monitoringc/types";
+
+message MonitoringHistory {
+  uint64                                launchID               = 1;
+  spn.types.MonitoringPacket latestMonitoringPacket = 2 [(gogoproto.nullable) = false];
+}

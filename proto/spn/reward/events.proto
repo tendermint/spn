@@ -1,0 +1,27 @@
+syntax = "proto3";
+package spn.reward;
+
+import "gogoproto/gogo.proto";
+import "spn/reward/reward_pool.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/tendermint/spn/x/reward/types";
+
+message EventRewardPoolCreated {
+  uint64 launchID = 1;
+  string provider = 2;
+}
+
+message EventRewardPoolRemoved {
+  uint64 launchID = 1;
+}
+
+message EventRewardsDistributed {
+  uint64   launchID                         = 1;
+  string   receiver                         = 2;
+  repeated cosmos.base.v1beta1.Coin rewards = 3 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}

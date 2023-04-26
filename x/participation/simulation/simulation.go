@@ -5,8 +5,7 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
@@ -14,7 +13,7 @@ import (
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
-
+	"github.com/tendermint/spn/testutil/encoding"
 	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/participation/keeper"
 	"github.com/tendermint/spn/x/participation/types"
@@ -54,7 +53,7 @@ func SimulateMsgParticipate(
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),
@@ -65,7 +64,7 @@ func SimulateMsgParticipate(
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -96,7 +95,7 @@ func SimulateMsgWithdrawAllocations(
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),
@@ -107,7 +106,7 @@ func SimulateMsgWithdrawAllocations(
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -144,7 +143,7 @@ func SimulateMsgCancelAuction(
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),
@@ -155,6 +154,6 @@ func SimulateMsgCancelAuction(
 			ModuleName:      fundraisingtypes.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }

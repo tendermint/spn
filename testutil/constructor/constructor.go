@@ -4,9 +4,9 @@ package constructor
 import (
 	"testing"
 
+	abci "github.com/cometbft/cometbft/abci/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	abci "github.com/tendermint/tendermint/abci/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
@@ -20,8 +20,8 @@ type Vote struct {
 }
 
 // LastCommitInfo creates a ABCI LastCommitInfo object for test purpose from a list of vote
-func LastCommitInfo(votes ...Vote) abci.LastCommitInfo {
-	var lci abci.LastCommitInfo
+func LastCommitInfo(votes ...Vote) abci.CommitInfo {
+	var lci abci.CommitInfo
 
 	// add votes
 	for _, vote := range votes {

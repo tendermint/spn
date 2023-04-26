@@ -3,13 +3,13 @@ package keeper
 import (
 	"testing"
 
+	"github.com/cometbft/cometbft/libs/log"
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/require"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
@@ -42,7 +42,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	authKeeper := initializer.Auth(paramKeeper)
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper)
 	upgradeKeeper := initializer.Upgrade()
 	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
 	monitoringProviderKeeper := initializer.Monitoringp(
@@ -57,7 +57,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	projectKeeper := initializer.Project(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
+	projectKeeper := initializer.Project(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetProjectKeeper(projectKeeper)
 

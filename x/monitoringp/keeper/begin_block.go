@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
+	abci "github.com/cometbft/cometbft/abci/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
-	abci "github.com/tendermint/tendermint/abci/types"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringp/types"
@@ -20,7 +20,7 @@ const (
 )
 
 // ReportBlockSignatures gets signatures from blocks and update monitoring info
-func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommitInfo, blockHeight int64) error {
+func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.CommitInfo, blockHeight int64) error {
 	// skip first block because it is not signed
 	if blockHeight == 1 {
 		return nil

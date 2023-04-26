@@ -1,0 +1,18 @@
+syntax = "proto3";
+package spn.monitoringp;
+
+import "gogoproto/gogo.proto";
+import "spn/types/ibc.proto";
+
+option go_package = "github.com/tendermint/spn/x/monitoringp/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  int64                               lastBlockHeight         = 1;
+  string                              consumerChainID         = 2;
+  spn.types.ConsensusState consumerConsensusState  = 3 [(gogoproto.nullable) = false];
+  int64                               consumerUnbondingPeriod = 4;
+  uint64                              consumerRevisionHeight  = 5;
+}

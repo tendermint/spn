@@ -6,9 +6,7 @@ import (
 	"strconv"
 
 	sdkmath "cosmossdk.io/math"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -41,8 +39,10 @@ type NetworkTestSuite struct {
 
 // SetupSuite setups the local network with a genesis state
 func (nts *NetworkTestSuite) SetupSuite() {
-	r := sample.Rand()
-	cfg := network.DefaultConfig()
+	var (
+		r   = sample.Rand()
+		cfg = network.DefaultConfig()
+	)
 
 	updateGenesisConfigState := func(moduleName string, moduleState proto.Message) {
 		buf, err := cfg.Codec.MarshalJSON(moduleState)

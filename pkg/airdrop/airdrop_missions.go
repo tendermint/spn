@@ -2,9 +2,9 @@ package airdrop
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	claimkeeper "github.com/ignite/modules/x/claim/keeper"
-
 	launchtypes "github.com/tendermint/spn/x/launch/types"
+
+	claimkeeper "github.com/ignite/modules/x/claim/keeper"
 )
 
 // MissionSendRequestHooks is an implementation of launch hooks that completes a claim mission

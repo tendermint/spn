@@ -4,12 +4,11 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
-
+	"github.com/tendermint/spn/testutil/encoding"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/launch/keeper"
@@ -49,7 +48,7 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -60,7 +59,7 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: creationFee,
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -112,7 +111,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -123,7 +122,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -172,7 +171,7 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -183,7 +182,7 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: fee,
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -232,7 +231,7 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -243,7 +242,7 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: fee,
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -315,7 +314,7 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),
@@ -326,7 +325,7 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: fee,
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -354,7 +353,7 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -365,7 +364,7 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: fee,
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -390,7 +389,7 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -401,7 +400,7 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: fee,
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -428,7 +427,7 @@ func SimulateMsgRequestParamChange(ak types.AccountKeeper, bk types.BankKeeper, 
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -439,7 +438,7 @@ func SimulateMsgRequestParamChange(ak types.AccountKeeper, bk types.BankKeeper, 
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: fee,
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -464,7 +463,7 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -475,7 +474,7 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -512,7 +511,7 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -523,7 +522,7 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -553,7 +552,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -564,7 +563,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
 
@@ -596,7 +595,7 @@ func SimulateMsgUpdateLaunchInformation(ak types.AccountKeeper, bk types.BankKee
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           encoding.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             &msg,
 			MsgType:         msg.Type(),
@@ -607,6 +606,6 @@ func SimulateMsgUpdateLaunchInformation(ak types.AccountKeeper, bk types.BankKee
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }

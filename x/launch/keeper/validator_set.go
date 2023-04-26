@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 
 	sdkerrors "cosmossdk.io/errors"
+	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	tmtypes "github.com/tendermint/tendermint/types"
 
 	"github.com/tendermint/spn/x/launch/types"
 )

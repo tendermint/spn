@@ -36,22 +36,22 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.LegacyParamChange {
 	monitoringpParams := sample.MonitoringpParams(r)
-	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLastBlockHeight), func(r *rand.Rand) string {
+	return []simtypes.LegacyParamChange{
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyLastBlockHeight), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(monitoringpParams.LastBlockHeight))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerConsensusState), func(r *rand.Rand) string {
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyConsumerConsensusState), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerConsensusState))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerChainID), func(r *rand.Rand) string {
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyConsumerChainID), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerChainID))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerUnbondingPeriod), func(r *rand.Rand) string {
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyConsumerUnbondingPeriod), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerUnbondingPeriod))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerRevisionHeight), func(r *rand.Rand) string {
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyConsumerRevisionHeight), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerRevisionHeight))
 		}),
 	}
