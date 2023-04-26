@@ -5,8 +5,9 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ignterrors "github.com/ignite/modules/pkg/errors"
 	"github.com/stretchr/testify/require"
+
+	ignterrors "github.com/ignite/modules/pkg/errors"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	tc "github.com/tendermint/spn/testutil/constructor"

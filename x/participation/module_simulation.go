@@ -42,19 +42,19 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.LegacyParamChange {
 	participationParams := sample.ParticipationParams(r)
-	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyAllocationPrice), func(r *rand.Rand) string {
+	return []simtypes.LegacyParamChange{
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyAllocationPrice), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.AllocationPrice))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyParticipationTierList), func(r *rand.Rand) string {
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyParticipationTierList), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.ParticipationTierList))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyRegistrationPeriod), func(r *rand.Rand) string {
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyRegistrationPeriod), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.RegistrationPeriod))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyWithdrawalDelay), func(r *rand.Rand) string {
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyWithdrawalDelay), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.WithdrawalDelay))
 		}),
 	}

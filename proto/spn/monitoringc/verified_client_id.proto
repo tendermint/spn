@@ -1,0 +1,9 @@
+syntax = "proto3";
+package spn.monitoringc;
+
+option go_package = "github.com/tendermint/spn/x/monitoringc/types";
+
+message VerifiedClientID {
+  uint64          launchID  = 1;
+  repeated string clientIDs = 2;
+}

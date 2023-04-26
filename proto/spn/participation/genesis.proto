@@ -1,0 +1,16 @@
+syntax = "proto3";
+package spn.participation;
+
+import "gogoproto/gogo.proto";
+import "spn/participation/params.proto";
+import "spn/participation/used_allocations.proto";
+import "spn/participation/auction_used_allocations.proto";
+
+option go_package = "github.com/tendermint/spn/x/participation/types";
+
+// GenesisState defines the participation module's genesis state.
+message GenesisState {
+  repeated UsedAllocations        usedAllocationsList        = 1 [(gogoproto.nullable) = false];
+  repeated AuctionUsedAllocations auctionUsedAllocationsList = 2 [(gogoproto.nullable) = false];
+  Params                          params                     = 3 [(gogoproto.nullable) = false];
+}

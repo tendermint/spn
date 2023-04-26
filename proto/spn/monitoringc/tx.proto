@@ -1,0 +1,26 @@
+syntax = "proto3";
+package spn.monitoringc;
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "spn/types/ibc.proto";
+
+option go_package = "github.com/tendermint/spn/x/monitoringc/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc CreateClient(MsgCreateClient) returns (MsgCreateClientResponse);
+}
+
+message MsgCreateClient {
+  string                              creator         = 1;
+  uint64                              launchID        = 2;
+  spn.types.ConsensusState consensusState  = 3 [(gogoproto.nullable) = false];
+  spn.types.ValidatorSet   validatorSet    = 4 [(gogoproto.nullable) = false];
+  int64                               unbondingPeriod = 5;
+  uint64                              revisionHeight  = 6;
+}
+
+message MsgCreateClientResponse {
+  string clientID = 1;
+}

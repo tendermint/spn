@@ -1,0 +1,186 @@
+syntax = "proto3";
+package spn.launch;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+
+import "spn/launch/request.proto";
+import "spn/launch/vesting_account.proto";
+import "spn/launch/genesis_account.proto";
+import "spn/launch/genesis_validator.proto";
+import "spn/launch/chain.proto";
+import "spn/launch/params.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Queries a chain by index.
+  rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/chain/{launchID}";
+  }
+  // Queries a list of chain items.
+  rpc ChainAll(QueryAllChainRequest) returns (QueryAllChainResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/chain";
+  }
+
+  // Queries a genesisAccount by index.
+  rpc GenesisAccount(QueryGetGenesisAccountRequest) returns (QueryGetGenesisAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/genesis_account/{launchID}/{address}";
+  }
+  // Queries a list of genesisAccount items.
+  rpc GenesisAccountAll(QueryAllGenesisAccountRequest) returns (QueryAllGenesisAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/genesis_account/{launchID}";
+  }
+
+  // Queries a vestingAccount by index.
+  rpc VestingAccount(QueryGetVestingAccountRequest) returns (QueryGetVestingAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/vesting_account/{launchID}/{address}";
+  }
+  // Queries a list of vestingAccount items.
+  rpc VestingAccountAll(QueryAllVestingAccountRequest) returns (QueryAllVestingAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/vesting_account/{launchID}";
+  }
+
+  // Queries a genesisValidator by index.
+  rpc GenesisValidator(QueryGetGenesisValidatorRequest) returns (QueryGetGenesisValidatorResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/genesis_validator/{launchID}/{address}";
+  }
+
+  // Queries a list of genesisValidator items.
+  rpc GenesisValidatorAll(QueryAllGenesisValidatorRequest) returns (QueryAllGenesisValidatorResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/genesis_validator/{launchID}";
+  }
+
+  // Queries a list of ParamChange items.
+  rpc ParamChangeAll(QueryAllParamChangeRequest) returns (QueryAllParamChangeResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/paramChange/{launchID}";
+  }
+
+  // Queries a request by index.
+  rpc Request(QueryGetRequestRequest) returns (QueryGetRequestResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/request/{launchID}/{requestID}";
+  }
+  // Queries a list of request for a chain.
+  rpc RequestAll(QueryAllRequestRequest) returns (QueryAllRequestResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/request/{launchID}";
+  }
+
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/params";
+  }
+}
+
+message QueryGetChainRequest {
+  uint64 launchID = 1;
+}
+
+message QueryGetChainResponse {
+  Chain chain = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllChainRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllChainResponse {
+  repeated Chain                         chain      = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetGenesisAccountRequest {
+  uint64 launchID = 1;
+  string address  = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message QueryGetGenesisAccountResponse {
+  GenesisAccount genesisAccount = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllGenesisAccountRequest {
+  uint64                                launchID   = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllGenesisAccountResponse {
+  repeated GenesisAccount                genesisAccount = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination     = 2;
+}
+
+message QueryGetVestingAccountRequest {
+  uint64 launchID = 1;
+  string address  = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message QueryGetVestingAccountResponse {
+  VestingAccount vestingAccount = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllVestingAccountRequest {
+  uint64                                launchID   = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllVestingAccountResponse {
+  repeated VestingAccount                vestingAccount = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination     = 2;
+}
+
+message QueryGetGenesisValidatorRequest {
+  uint64 launchID = 1;
+  string address  = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message QueryGetGenesisValidatorResponse {
+  GenesisValidator genesisValidator = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllGenesisValidatorRequest {
+  uint64                                launchID   = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllGenesisValidatorResponse {
+  repeated GenesisValidator              genesisValidator = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination       = 2;
+}
+
+message QueryGetRequestRequest {
+  uint64 launchID  = 1;
+  uint64 requestID = 2;
+}
+
+message QueryGetRequestResponse {
+  Request request = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllRequestRequest {
+  uint64                                launchID   = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllRequestResponse {
+  repeated Request                       request    = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllParamChangeRequest {
+  uint64                                launchID   = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllParamChangeResponse {
+  repeated ParamChange                   paramChanges = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination   = 2;
+}

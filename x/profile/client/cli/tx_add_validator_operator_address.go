@@ -34,7 +34,11 @@ func CmdAddValidatorOperatorAddress() *cobra.Command {
 			}
 
 			// initialize tx
-			txf := tx.NewFactoryCLI(clientCtx, cmd.Flags())
+			txf, err := tx.NewFactoryCLI(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
 			txBuilder, err := txf.BuildUnsignedTx(msg)
 			if err != nil {
 				return err

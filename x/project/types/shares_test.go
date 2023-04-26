@@ -23,7 +23,7 @@ var (
 func TestEmptyShares(t *testing.T) {
 	t.Run("should allow creation of empty shares", func(t *testing.T) {
 		shares := project.EmptyShares()
-		require.Equal(t, project.Shares(nil), shares)
+		require.Equal(t, project.Shares{}, shares)
 	})
 }
 

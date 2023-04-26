@@ -1,0 +1,41 @@
+syntax = "proto3";
+package spn.types;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/tendermint/spn/pkg/types";
+
+// MonitoringPacketData is the IBC packet for monitoring modules
+message MonitoringPacketData {
+  oneof packet {
+    // this line is used by starport scaffolding # ibc/packet/proto/field
+    MonitoringPacket monitoringPacket = 1;
+  }
+}
+
+// MonitoringPacketAck defines a struct for the packet acknowledgment
+message MonitoringPacketAck {}
+
+// MonitoringPacket is the packet sent over IBC that contains all the signature counts
+message MonitoringPacket {
+  int64           blockHeight     = 1;
+  SignatureCounts signatureCounts = 2 [(gogoproto.nullable) = false];
+}
+
+// SignatureCounts contains information about signature reporting for a number of blocks
+message SignatureCounts {
+  uint64                  blockCount = 1;
+  repeated SignatureCount counts     = 2 [(gogoproto.nullable) = false];
+}
+
+// SignatureCount contains information of signature reporting for one specific validator with consensus address
+// RelativeSignatures is the sum of all signatures relative to the validator set size
+message SignatureCount {
+  string opAddress          = 1;
+  string RelativeSignatures = 2 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
+}

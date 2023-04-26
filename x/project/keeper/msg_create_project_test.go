@@ -158,7 +158,7 @@ func TestMsgCreateProject(t *testing.T) {
 			require.EqualValues(t, coordMap[tc.msg.Coordinator], project.CoordinatorID)
 			require.False(t, project.MainnetInitialized)
 			require.True(t, tc.msg.TotalSupply.IsEqual(project.TotalSupply))
-			require.EqualValues(t, types.EmptyShares(), project.AllocatedShares)
+			require.EqualValues(t, types.Shares(nil), project.AllocatedShares)
 
 			// Empty list of project chains
 			projectChains, found := tk.ProjectKeeper.GetProjectChains(sdkCtx, got.ProjectID)

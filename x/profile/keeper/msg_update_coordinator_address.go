@@ -5,10 +5,11 @@ import (
 	"fmt"
 
 	sdkerrors "cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	ignterrors "github.com/ignite/modules/pkg/errors"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/profile/types"
+
+	ignterrors "github.com/ignite/modules/pkg/errors"
 )
 
 func (k msgServer) UpdateCoordinatorAddress(

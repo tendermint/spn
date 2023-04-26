@@ -5,16 +5,16 @@ import (
 	"time"
 
 	sdkerrors "cosmossdk.io/errors"
+	"github.com/cometbft/cometbft/light"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
-	committypes "github.com/cosmos/ibc-go/v6/modules/core/23-commitment/types"
-	ibctmtypes "github.com/cosmos/ibc-go/v6/modules/light-clients/07-tendermint/types"
-	ignterrors "github.com/ignite/modules/pkg/errors"
-	"github.com/tendermint/tendermint/light"
-
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	committypes "github.com/cosmos/ibc-go/v7/modules/core/23-commitment/types"
+	ibctmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	"github.com/tendermint/spn/pkg/chainid"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
+
+	ignterrors "github.com/ignite/modules/pkg/errors"
 )
 
 func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClient) (*types.MsgCreateClientResponse, error) {
@@ -97,7 +97,5 @@ func (k msgServer) initializeClientState(
 		clienttypes.NewHeight(revisionNumber, revisionHeight),
 		committypes.GetSDKSpecs(),
 		[]string{"upgrade", "upgradedIBCState"},
-		true,
-		true,
 	), nil
 }

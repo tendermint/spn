@@ -1,9 +1,0 @@
-syntax = "proto3";
-package tendermint.spn.project;
-
-option go_package = "github.com/tendermint/spn/x/project/types";
-
-message ProjectChains {
-  uint64          projectID = 1;
-  repeated uint64 chains    = 2;
-}

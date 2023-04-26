@@ -1,0 +1,35 @@
+syntax = "proto3";
+package spn.launch;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+// Params defines the parameters for the staking module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  LaunchTimeRange          launchTimeRange           = 1 [(gogoproto.nullable) = false];
+  google.protobuf.Duration revertDelay               = 2 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
+  repeated cosmos.base.v1beta1.Coin chainCreationFee = 3 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+
+  // requestFee is the fee for making a request to a chain
+  repeated cosmos.base.v1beta1.Coin requestFee = 4 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+
+  uint64 maxMetadataLength = 5;
+}
+
+message LaunchTimeRange {
+  google.protobuf.Duration minLaunchTime = 1 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
+  google.protobuf.Duration maxLaunchTime = 2 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
+}
