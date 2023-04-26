@@ -18,9 +18,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	"github.com/ignite/modules/app"
-
 	spnapp "github.com/tendermint/spn/app"
 	"github.com/tendermint/spn/cmd"
 )
@@ -28,14 +25,14 @@ import (
 func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*spnapp.App, spnapp.GenesisState) {
 	var (
 		db     = dbm.NewMemDB()
-		encCdc = cmd.MakeEncodingConfig(app.ModuleBasics)
+		encCdc = cmd.MakeEncodingConfig(spnapp.ModuleBasics)
 		app    = spnapp.New(
 			log.NewNopLogger(),
 			db,
 			nil,
 			true,
 			map[int64]bool{},
-			app.DefaultNodeHome,
+			spnapp.DefaultNodeHome,
 			invCheckPeriod,
 			encCdc,
 			simtestutil.EmptyAppOptions{},
