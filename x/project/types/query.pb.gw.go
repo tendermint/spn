@@ -1044,25 +1044,25 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Project_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"tendermint", "spn", "project", "projectID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Project_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"tendermint", "spn", "project", "projectID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ProjectAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 2}, []string{"tendermint", "spn", "project"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ProjectAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 2}, []string{"tendermint", "spn", "project"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ProjectChains_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "project", "project_chains", "projectID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ProjectChains_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "project", "project_chains", "projectID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_SpecialAllocationsBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "project", "special_allocations_balance", "projectID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_SpecialAllocationsBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "project", "special_allocations_balance", "projectID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MainnetAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "project", "mainnet_account", "projectID", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_MainnetAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "project", "mainnet_account", "projectID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MainnetAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "project", "mainnet_account", "projectID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_MainnetAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "project", "mainnet_account", "projectID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MainnetAccountBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "project", "mainnet_account_balance", "projectID", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_MainnetAccountBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "project", "mainnet_account_balance", "projectID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MainnetAccountBalanceAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "project", "mainnet_account_balance", "projectID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_MainnetAccountBalanceAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "project", "mainnet_account_balance", "projectID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "project", "params"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "project", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_TotalShares_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "project", "total_shares"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_TotalShares_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "project", "total_shares"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
