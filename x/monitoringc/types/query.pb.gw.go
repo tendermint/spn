@@ -691,19 +691,19 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_VerifiedClientIds_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "monitoringc", "verified_client_ids", "launchID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_VerifiedClientIds_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "monitoringc", "verified_client_ids", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ProviderClientID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "monitoringc", "provider_client_id", "launchID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ProviderClientID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "monitoringc", "provider_client_id", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ProviderClientIDAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringc", "provider_client_id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ProviderClientIDAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringc", "provider_client_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_LaunchIDFromChannelID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "monitoringc", "launch_id_from_channel_id", "channelID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_LaunchIDFromChannelID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "monitoringc", "launch_id_from_channel_id", "channelID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_LaunchIDFromChannelIDAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringc", "launch_id_from_channel_id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_LaunchIDFromChannelIDAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringc", "launch_id_from_channel_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MonitoringHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "monitoringc", "monitoring_history", "launchID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_MonitoringHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "monitoringc", "monitoring_history", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringc", "params"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringc", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
