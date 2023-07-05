@@ -4,6 +4,7 @@
 # buf.yaml
 #
 version: v1
+name: buf.build/ignitehq/spn
 deps:
   - buf.build/cosmos/cosmos-sdk:954f7b05f38440fc8250134b15adec47
   - buf.build/cosmos/cosmos-proto:1935555c206d4afb9e94615dfd0fad31
