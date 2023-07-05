@@ -831,8 +831,8 @@ github.com/hudl/fargo v1.3.0/go.mod h1:y3CKSmjA+wD2gak7sUSXTAoopbhU08POFhmITJgmK
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20210905161508-09a460cdf81d/go.mod h1:aYm2/VgdVmcIU8iMfdMvDMsRAQjcfZSKFby6HOFvi/w=
-github.com/ignite/modules v0.0.0-20230619233611-d6fe679c19a7 h1:XZtKgR/KgkOjyq92QLnm77XtscgTGqPDK/5YzTWsh1E=
-github.com/ignite/modules v0.0.0-20230619233611-d6fe679c19a7/go.mod h1:MdPE33lMAgV2ovGcl9D8bYMsb6Ejoysy+xjri+W3tT4=
+github.com/ignite/modules v0.0.1 h1:dZSE2GF8SE5by/21v5FF58RXGmDUZdcCZ77QyRf+h0g=
+github.com/ignite/modules v0.0.1/go.mod h1:PFuOj11+xz9CzfXLOy1djVfn5kJ7iyk9BRpZhTrvrkg=
 github.com/improbable-eng/grpc-web v0.15.0 h1:BN+7z6uNXZ1tQGcNAuaU1YjsLTApzkjt2tzCixLaUPQ=
 github.com/improbable-eng/grpc-web v0.15.0/go.mod h1:1sy9HKV4Jt9aEs9JSnkWlRJPuPtwNr0l57L4f878wP8=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
@@ -1255,8 +1255,8 @@ github.com/tdakkota/asciicheck v0.1.1 h1:PKzG7JUTUmVspQTDqtkX9eSiLGossXTybutHwTX
 github.com/tdakkota/asciicheck v0.1.1/go.mod h1:yHp0ai0Z9gUljN3o0xMhYJnH/IcvkdTBOX2fmJ93JEM=
 github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c h1:g+WoO5jjkqGAzHWCjJB1zZfXPIAaDpzXIEJ0eS6B5Ok=
 github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c/go.mod h1:ahpPrc7HpcfEWDQRZEmnXMzHY03mLDYMCxeDzy46i+8=
-github.com/tendermint/fundraising v0.3.2-0.20230613160010-82167449d3a2 h1:KAqALUVxB9tT0QeJB4IIwD758BXOT4NTvAomtKwiRHE=
-github.com/tendermint/fundraising v0.3.2-0.20230613160010-82167449d3a2/go.mod h1:34+0Y1lZ7tpmPAiLpWKLZNBDnIEM79dCXgWX9J0l6Sg=
+github.com/tendermint/fundraising v0.4.0 h1:0JIwPYThwmcGMaVW0Vdi9/DNdD1YtEvwdQXKf5OEEaM=
+github.com/tendermint/fundraising v0.4.0/go.mod h1:onZYPdpPkmAh5VS0X1iMHr0W3s8qPUyG0oO+KNeOWGo=
 github.com/tendermint/go-amino v0.16.0 h1:GyhmgQKvqF82e2oZeuMSp9JTN0N09emoSZlb2lyGa2E=
 github.com/tendermint/go-amino v0.16.0/go.mod h1:TQU0M1i/ImAo+tYpZi73AU3V/dKeCoMC9Sphe2ZwGME=
 github.com/tenntenn/modver v1.0.1 h1:2klLppGhDgzJrScMpkj9Ujy3rXPUspSjAcev9tSEBgA=
