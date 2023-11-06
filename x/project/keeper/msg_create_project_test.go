@@ -60,10 +60,7 @@ func TestMsgCreateProject(t *testing.T) {
 		for i := range coordAddrs {
 			addr := sample.Address(r)
 			coordAddrs[i] = addr
-			msgCreateCoordinator := sample.MsgCreateCoordinator(addr)
-			resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-			require.NoError(t, err)
-			coordMap[addr] = resCoord.CoordinatorID
+			coordMap[addr], _ = ts.CreateCoordinator(ctx, r, addr)
 		}
 	})
 
