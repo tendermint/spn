@@ -17,8 +17,6 @@ import (
 
 func TestMsgEditChain(t *testing.T) {
 	var (
-		coordAddress    = sample.Address(r)
-		coordAddress2   = sample.Address(r)
 		coordNoExist    = sample.Address(r)
 		launchIDNoExist = uint64(1000)
 		sdkCtx, tk, ts  = testkeeper.NewTestSetup(t)
@@ -26,61 +24,36 @@ func TestMsgEditChain(t *testing.T) {
 	)
 
 	// Create coordinators
-	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
+	_, coordAddress := ts.CreateCoordinator(ctx, r)
+	_, coordAddress2 := ts.CreateCoordinator(ctx, r)
 
 	// Create a chain
-	msgCreateChain := sample.MsgCreateChain(r, coordAddress, "", false, 0)
-	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	launchID := res.LaunchID
+	launchID := ts.CreateChain(ctx, r, coordAddress.String(), "", false, 0)
 
 	// create a project
-	msgCreateProject := sample.MsgCreateProject(r, coordAddress)
-	resProject, err := ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
+	projectID := ts.CreateProject(ctx, r, coordAddress.String())
 
 	// create a chain with an existing project
-	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", true, resProject.ProjectID)
-	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	launchIDHasProject := res.LaunchID
+	launchIDHasProject := ts.CreateChain(ctx, r, coordAddress.String(), "", true, projectID)
 
 	// create a project
-	msgCreateProject = sample.MsgCreateProject(r, coordAddress)
-	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
-	validProjectID := resProject.ProjectID
+	validProjectID := ts.CreateProject(ctx, r, coordAddress.String())
 
 	// create a project from a different address
-	msgCreateProject = sample.MsgCreateProject(r, coordAddress2)
-	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
-	projectDifferentCoordinator := resProject.ProjectID
+	projectDifferentCoordinator := ts.CreateProject(ctx, r, coordAddress2.String())
 
 	// Create a new chain for more tests
-	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", false, 0)
-	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	launchID2 := res.LaunchID
+	launchID2 := ts.CreateChain(ctx, r, coordAddress.String(), "", false, 0)
 
 	// create a new project and add a chainProjects entry to it
-	msgCreateProject = sample.MsgCreateProject(r, coordAddress)
-	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
-	projectDuplicateChain := resProject.ProjectID
+	projectDuplicateChain := ts.CreateProject(ctx, r, coordAddress.String())
 
-	err = tk.ProjectKeeper.AddChainToProject(sdkCtx, projectDuplicateChain, launchID2)
+	err := tk.ProjectKeeper.AddChainToProject(sdkCtx, projectDuplicateChain, launchID2)
 	require.NoError(t, err)
 
 	// create message with an invalid metadata length
 	msgEditChainInvalidMetadata := sample.MsgEditChain(r,
-		coordAddress,
+		coordAddress.String(),
 		launchID,
 		true,
 		validProjectID,
@@ -97,7 +70,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "should allow setting a project ID",
 			msg: sample.MsgEditChain(r,
-				coordAddress,
+				coordAddress.String(),
 				launchID,
 				true,
 				validProjectID,
@@ -107,7 +80,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "should allow editing metadata",
 			msg: sample.MsgEditChain(r,
-				coordAddress,
+				coordAddress.String(),
 				launchID,
 				false,
 				0,
@@ -117,7 +90,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "should prevent editing chain from non existent launch id",
 			msg: sample.MsgEditChain(r,
-				coordAddress,
+				coordAddress.String(),
 				launchIDNoExist,
 				true,
 				0,
@@ -139,7 +112,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "should prevent editing chain with invalid coordinator",
 			msg: sample.MsgEditChain(r,
-				coordAddress2,
+				coordAddress2.String(),
 				launchID,
 				true,
 				0,
@@ -150,7 +123,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "should prevent setting project id for chain with a project",
 			msg: sample.MsgEditChain(r,
-				coordAddress,
+				coordAddress.String(),
 				launchIDHasProject,
 				true,
 				0,
@@ -161,7 +134,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "should prevent setting project id where project does not exist",
 			msg: sample.MsgEditChain(r,
-				coordAddress,
+				coordAddress.String(),
 				launchID2,
 				true,
 				999,
@@ -172,7 +145,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "should prevent setting project id where project has a different coordinator",
 			msg: sample.MsgEditChain(r,
-				coordAddress,
+				coordAddress.String(),
 				launchID2,
 				true,
 				projectDifferentCoordinator,
@@ -183,7 +156,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "should prevent setting project id where project chain entry is duplicated",
 			msg: sample.MsgEditChain(r,
-				coordAddress,
+				coordAddress.String(),
 				launchID2,
 				true,
 				projectDuplicateChain,
