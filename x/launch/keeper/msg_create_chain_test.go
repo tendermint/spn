@@ -65,7 +65,7 @@ func TestMsgCreateChain(t *testing.T) {
 	for i := range coordAddrs {
 		addr := sample.Address(r)
 		coordAddrs[i] = addr
-		coordMap[addr], _ = ts.CreateCoordinator(ctx, r, addr)
+		coordMap[addr], _ = ts.CreateCoordinatorWithAddr(ctx, r, addr)
 	}
 
 	// Create a project for each valid coordinator

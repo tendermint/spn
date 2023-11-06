@@ -60,7 +60,7 @@ func TestMsgCreateProject(t *testing.T) {
 		for i := range coordAddrs {
 			addr := sample.Address(r)
 			coordAddrs[i] = addr
-			coordMap[addr], _ = ts.CreateCoordinator(ctx, r, addr)
+			coordMap[addr], _ = ts.CreateCoordinatorWithAddr(ctx, r, addr)
 		}
 	})
 
