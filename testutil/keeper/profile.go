@@ -13,13 +13,7 @@ import (
 
 // CreateCoordinator creates a coordinator in the store and returns ID with associated address
 func (tm TestMsgServers) CreateCoordinator(ctx context.Context, r *rand.Rand) (id uint64, address sdk.AccAddress) {
-	addr := sample.AccAddress(r)
-	res, err := tm.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     addr.String(),
-		Description: sample.CoordinatorDescription(r),
-	})
-	require.NoError(tm.T, err)
-	return res.CoordinatorID, addr
+	return tm.CreateCoordinatorWithAddr(ctx, r, sample.Address(r))
 }
 
 // CreateCoordinator creates a coordinator in the store and returns ID with associated address
