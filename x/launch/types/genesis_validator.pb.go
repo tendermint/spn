@@ -112,6 +112,7 @@ func (m *GenesisValidator) GetPeer() Peer {
 type Peer struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// Types that are valid to be assigned to Connection:
+	//
 	//	*Peer_TcpAddress
 	//	*Peer_HttpTunnel
 	//	*Peer_None
