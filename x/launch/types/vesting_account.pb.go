@@ -92,6 +92,7 @@ func (m *VestingAccount) GetVestingOptions() VestingOptions {
 
 type VestingOptions struct {
 	// Types that are valid to be assigned to Options:
+	//
 	//	*VestingOptions_DelayedVesting
 	Options isVestingOptions_Options `protobuf_oneof:"options"`
 }

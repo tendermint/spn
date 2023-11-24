@@ -4,6 +4,7 @@ package tools
 
 import (
 	_ "github.com/bufbuild/buf/cmd/buf"
+	_ "github.com/cosmos/cosmos-proto/cmd/protoc-gen-go-pulsar"
 	_ "github.com/cosmos/gogoproto/protoc-gen-gocosmos"
 	_ "github.com/golang/protobuf/protoc-gen-go"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
