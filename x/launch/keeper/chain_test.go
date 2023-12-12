@@ -15,25 +15,13 @@ import (
 func TestKeeper_CreateNewChain(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address(r)
-	coordNoProjectAddress := sample.Address(r)
 
 	// Create coordinators
-	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-	coordID := res.CoordinatorID
-
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordNoProjectAddress)
-	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-	coordNoProjectID := res.CoordinatorID
+	coordID, coordAddress := ts.CreateCoordinator(ctx, r)
+	coordNoProjectID, _ := ts.CreateCoordinator(ctx, r)
 
 	// Create a project
-	msgCreateProject := sample.MsgCreateProject(r, coordAddress)
-	resProject, err := ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
-	projectID := resProject.ProjectID
+	projectID := ts.CreateProject(ctx, r, coordAddress.String())
 
 	for _, tc := range []struct {
 		name           string

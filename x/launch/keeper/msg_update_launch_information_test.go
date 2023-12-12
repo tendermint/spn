@@ -15,21 +15,15 @@ import (
 func TestMsgUpdateLaunchInformation(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address(r)
-	coordAddress2 := sample.Address(r)
 	coordNoExist := sample.Address(r)
 	launchIDNoExist := uint64(1000)
 
 	// Create coordinators
-	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
+	coordID, coordAddr := ts.CreateCoordinator(ctx, r)
+	coordAddress := coordAddr.String()
 
-	coordID := resCoord.CoordinatorID
-
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
+	_, coordAddr2 := ts.CreateCoordinator(ctx, r)
+	coordAddress2 := coordAddr2.String()
 
 	// Create a chain
 	launchID := uint64(1)

@@ -17,8 +17,6 @@ import (
 
 func TestMsgEditChain(t *testing.T) {
 	var (
-		coordAddress    = sample.Address(r)
-		coordAddress2   = sample.Address(r)
 		coordNoExist    = sample.Address(r)
 		launchIDNoExist = uint64(1000)
 		sdkCtx, tk, ts  = testkeeper.NewTestSetup(t)
@@ -26,56 +24,34 @@ func TestMsgEditChain(t *testing.T) {
 	)
 
 	// Create coordinators
-	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
+	_, coordAddr := ts.CreateCoordinator(ctx, r)
+	_, coordAddr2 := ts.CreateCoordinator(ctx, r)
 
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
+	coordAddress := coordAddr.String()
+	coordAddress2 := coordAddr2.String()
 
 	// Create a chain
-	msgCreateChain := sample.MsgCreateChain(r, coordAddress, "", false, 0)
-	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	launchID := res.LaunchID
+	launchID := ts.CreateChain(ctx, r, coordAddress, "", false, 0)
 
 	// create a project
-	msgCreateProject := sample.MsgCreateProject(r, coordAddress)
-	resProject, err := ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
+	projectID := ts.CreateProject(ctx, r, coordAddress)
 
 	// create a chain with an existing project
-	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", true, resProject.ProjectID)
-	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	launchIDHasProject := res.LaunchID
+	launchIDHasProject := ts.CreateChain(ctx, r, coordAddress, "", true, projectID)
 
 	// create a project
-	msgCreateProject = sample.MsgCreateProject(r, coordAddress)
-	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
-	validProjectID := resProject.ProjectID
+	validProjectID := ts.CreateProject(ctx, r, coordAddress)
 
 	// create a project from a different address
-	msgCreateProject = sample.MsgCreateProject(r, coordAddress2)
-	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
-	projectDifferentCoordinator := resProject.ProjectID
+	projectDifferentCoordinator := ts.CreateProject(ctx, r, coordAddress2)
 
 	// Create a new chain for more tests
-	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", false, 0)
-	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	launchID2 := res.LaunchID
+	launchID2 := ts.CreateChain(ctx, r, coordAddress, "", false, 0)
 
 	// create a new project and add a chainProjects entry to it
-	msgCreateProject = sample.MsgCreateProject(r, coordAddress)
-	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-	require.NoError(t, err)
-	projectDuplicateChain := resProject.ProjectID
+	projectDuplicateChain := ts.CreateProject(ctx, r, coordAddress)
 
-	err = tk.ProjectKeeper.AddChainToProject(sdkCtx, projectDuplicateChain, launchID2)
+	err := tk.ProjectKeeper.AddChainToProject(sdkCtx, projectDuplicateChain, launchID2)
 	require.NoError(t, err)
 
 	// create message with an invalid metadata length

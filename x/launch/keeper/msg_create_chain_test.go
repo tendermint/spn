@@ -58,28 +58,20 @@ func TestMsgCreateChain(t *testing.T) {
 	)
 
 	// Create an invalid coordinator
-	invalidCoordAddress := sample.Address(r)
-	msgCreateInvalidCoordinator := sample.MsgCreateCoordinator(invalidCoordAddress)
-	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
-	require.NoError(t, err)
+	_, invalidCoordAddr := ts.CreateCoordinator(ctx, r)
+	invalidCoordAddress := invalidCoordAddr.String()
 
 	// Create coordinators
 	for i := range coordAddrs {
 		addr := sample.Address(r)
 		coordAddrs[i] = addr
-		msgCreateCoordinator := sample.MsgCreateCoordinator(addr)
-		resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-		require.NoError(t, err)
-		coordMap[addr] = resCoord.CoordinatorID
+		coordMap[addr], _ = ts.CreateCoordinatorWithAddr(ctx, r, addr)
 	}
 
 	// Create a project for each valid coordinator
 	for i := range coordAddrs {
 		addr := coordAddrs[i]
-		msgCreateProject := sample.MsgCreateProject(r, addr)
-		resProject, err := ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
-		require.NoError(t, err)
-		prjtMap[addr] = resProject.ProjectID
+		prjtMap[addr] = ts.CreateProject(ctx, r, addr)
 	}
 
 	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators
