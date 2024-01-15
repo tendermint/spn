@@ -5,6 +5,7 @@ launchpad:
     description: project/description.md
     cover: project/cover.jpg
     logo: project/logo.jpg
+    bio: "Project bio lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a gravida erat. Donec maximus porttitor nibh, in malesuada arcud."
 cli:
   version:
     release: v0.24.0
